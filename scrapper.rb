@@ -40,7 +40,7 @@ def scrapper
 		end
 		page += 1
 	end
-	puts "Scrapped data in data.csv test"
+	puts "Scrapped data in data.csv test from mac"
 end
 
 scrapper
