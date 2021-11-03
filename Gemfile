@@ -2,5 +2,9 @@ source "https://rubygems.org"
 
 gem 'httparty'
 gem 'nokogiri'
-gem 'byebug'
 gem 'csv'
+gem 'rest-client'
+gem 'pry', '~> 0.12.2'
+gem 'json'
+gem 'net/http'
+gem 'uri'
