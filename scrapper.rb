@@ -28,7 +28,7 @@ def scrapper
 		csv << ["Product Name", "Price", "Location", "URL"]
 		response = RestClient.get "https://api.bukalapak.com/multistrategy-products?keywords=#{product_keyword}&limit=50&offset=0&facet=true&page=1&access_token=#{JSON.parse(access_token)['access_token']}"
 		n = 0
-		while n != JSON.parse(response)['meta']['per_page'] 
+		while n < JSON.parse(response)['data'].count 
 			product = {
 				productName: JSON.parse(response)['data'][n]['name'],
 				productPrice: JSON.parse(response)['data'][n]['price'],
