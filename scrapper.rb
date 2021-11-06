@@ -40,11 +40,7 @@ class Scrapper
 			when 'Bukalapak'
 				@csv << ['Product Name', 'Price', 'Location', 'URL']
 				access_token = RestClient.post 'https://www.bukalapak.com/westeros_auth_proxies', "{\"application_id\":1,\"authenticity_token\":\"\"}"			
-				p "TOKEN STATUS: #{access_token.status}"
-				p "TOKEN BODY: #{access_token.body}"
 				response = RestClient.get "https://api.bukalapak.com/multistrategy-products?keywords=#{product_keyword}&limit=50&offset=0&facet=true&page=1&access_token=#{JSON.parse(access_token)['access_token']}"
-				p "RESPONSE STATUS: #{response.status}"
-				p "RESPONSE BODY: #{response.body}"
 				n = 0
 				while n < JSON.parse(response)['data'].count 
 					product = {
@@ -111,6 +107,8 @@ class Scrapper
 				puts "Not available yet"
 			end
 		rescue RestClient::Forbidden => e
+			p "TOKEN BODY: #{JSON.parse(access_token)}"
+			p "RESPONSE BODY: #{JSON.parse(response)}"
 			retry if (retries += 1) < 5
 			Telegram::Bot::Client.run($token) do |bot|
 				bot.listen do |message|
