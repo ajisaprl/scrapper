@@ -107,8 +107,6 @@ class Scrapper
 				puts "Not available yet"
 			end
 		rescue RestClient::Forbidden => e
-			p "TOKEN BODY: #{JSON.parse(access_token)}"
-			p "RESPONSE BODY: #{JSON.parse(response)}"
 			retry if (retries += 1) < 5
 			Telegram::Bot::Client.run($token) do |bot|
 				bot.listen do |message|
