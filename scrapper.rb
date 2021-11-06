@@ -40,7 +40,11 @@ class Scrapper
 			when 'Bukalapak'
 				@csv << ['Product Name', 'Price', 'Location', 'URL']
 				access_token = RestClient.post 'https://www.bukalapak.com/westeros_auth_proxies', "{\"application_id\":1,\"authenticity_token\":\"\"}"			
+				p "TOKEN STATUS: #{access_token.status}"
+				p "TOKEN BODY: #{access_token.body}"
 				response = RestClient.get "https://api.bukalapak.com/multistrategy-products?keywords=#{product_keyword}&limit=50&offset=0&facet=true&page=1&access_token=#{JSON.parse(access_token)['access_token']}"
+				p "RESPONSE STATUS: #{response.status}"
+				p "RESPONSE BODY: #{response.body}"
 				n = 0
 				while n < JSON.parse(response)['data'].count 
 					product = {
@@ -50,8 +54,6 @@ class Scrapper
 						url: JSON.parse(response)['data'][n]['url']
 					}
 					n += 1
-					p "STATUS: #{response.status}"
-					p "BODY: #{response.body}"
 					@csv << ["#{product[:productName]}", "#{product[:productPrice]}","#{product[:storeLocation]}","#{product[:url]}"]
 				end
 			when 'Tokopedia'
