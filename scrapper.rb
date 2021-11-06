@@ -50,6 +50,8 @@ class Scrapper
 						url: JSON.parse(response)['data'][n]['url']
 					}
 					n += 1
+					p "STATUS: #{response.status}"
+					p "BODY: #{response.body}"
 					@csv << ["#{product[:productName]}", "#{product[:productPrice]}","#{product[:storeLocation]}","#{product[:url]}"]
 				end
 			when 'Tokopedia'
@@ -110,7 +112,7 @@ class Scrapper
 			retry if (retries += 1) < 5
 			Telegram::Bot::Client.run($token) do |bot|
 				bot.listen do |message|
-					bot.api.send_message(chat_id: message.chat.id, reply_to_message_id: message.message_id, text: 'Forbidden response from API. Retrying (5x)...')
+					bot.api.send_message(chat_id: message.chat.id, reply_to_message_id: message.message_id, text: 'Forbidden response from API. Retrying (3x)...')
 					break
 				end
 			end
