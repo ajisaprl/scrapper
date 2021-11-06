@@ -110,7 +110,7 @@ class Scrapper
 			retry if (retries += 1) < 5
 			Telegram::Bot::Client.run($token) do |bot|
 				bot.listen do |message|
-					bot.api.send_message(chat_id: message.chat.id, reply_to_message_id: message.message_id, text: 'Forbidden response from API')
+					bot.api.send_message(chat_id: message.chat.id, reply_to_message_id: message.message_id, text: 'Forbidden response from API. Retrying (5x)...')
 					break
 				end
 			end
