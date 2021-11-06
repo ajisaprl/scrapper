@@ -21,6 +21,7 @@ class Scrapper
 				users << message.chat.username
 				users_csv = CSV.open("users.csv", 'a+')
 				users_csv << users.uniq
+				bot.api.send_chat_action(chat_id: message.chat.id, action: 'upload_document')
 				@chat_id = message.from.id
 				@csv = CSV.open("data#{@chat_id}.csv", 'w+')
 				@csv << ['Product Name', 'Price', 'Location', 'URL']
