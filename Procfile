@@ -1,2 +1,2 @@
-web: ruby telegram_bot.rb -p $PORT
+web: ruby my_app.rb -p $PORT
 worker: bundle exec ruby telegram_bot.rb
