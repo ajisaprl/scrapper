@@ -20,7 +20,7 @@ def select_marketplace
 	Telegram::Bot::Client.run($token) do |bot|
 		bot.listen do |message|
 				kb = [
-					Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Bukalapak'),
+					# Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Bukalapak'),
 					Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Tokopedia'),
 					Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Shopee'),
 				]
@@ -41,7 +41,7 @@ Telegram::Bot::Client.run($token) do |bot|
 			when message.text.include?('/key')
 				@keyword = message.text.gsub('/key', '').lstrip
 				select_marketplace
-			when ['Bukalapak', 'Tokopedia', 'Shopee'].any? { |text| text.include? message.text }
+			when ['Tokopedia', 'Shopee'].any? { |text| text.include? message.text }
 				@marketplace = message.text
 				Telegram::Bot::Types::ReplyKeyboardRemove.new(remove_keyboard: true)
 			end
