@@ -10,6 +10,7 @@ require 'json'
 require 'net/http'
 require 'uri'
 require './support/tokopedia_support'
+require './support/tanihub_support'
 require 'telegram/bot'
 
 class Scrapper
@@ -102,6 +103,34 @@ class Scrapper
 						}
 						n += 1
 						@csv << ["#{product[:productName]}", "#{product[:productPrice]}","#{product[:storeLocation]}","#{product[:url]}"]
+					end
+				end
+			when 'Tanihub'
+				response = TanihubSupport.curl_command(product_keyword)
+				@csv << ['Product Name', 'Price', 'Location', 'URL']
+				sleep 3
+				n = 0
+				while n < JSON.parse(response.body)['data']['sellings']['items'].count
+					product = {
+						productName: JSON.parse(response.body)['data']['sellings']['items'][n]['product']['name'],
+						productPrice: JSON.parse(response.body)['data']['sellings']['items'][n]['productPrices'][0]['price'],
+						storeLocation: 'Tanihub Warehouse',
+						url: JSON.parse(response.body)['data']['sellings']['items'][n]['product']['slug']
+					}
+					n += 1
+					@csv << ["#{product[:productName]}", "#{product[:productPrice]}","#{product[:storeLocation]}","https://tanihub.com/p/jabodetabek/#{product[:url]}"]
+				end
+				while CSV.open("data#{@chat_id}.csv").count <= 1
+					n = 0
+					while n < JSON.parse(response.body)['data']['sellings']['items'].count
+						product = {
+							productName: JSON.parse(response.body)['data']['sellings']['items'][n]['product']['name'],
+							productPrice: JSON.parse(response.body)['data']['sellings']['items'][n]['productPrices'][0]['price'],
+							storeLocation: 'Tanihub Warehouse',
+							url: JSON.parse(response.body)['data']['sellings']['items'][n]['product']['slug']
+						}
+						n += 1
+						@csv << ["#{product[:productName]}", "#{product[:productPrice]}","#{product[:storeLocation]}","https://tanihub.com/p/jabodetabek/#{product[:url]}"]
 					end
 				end
 			else
