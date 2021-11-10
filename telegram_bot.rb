@@ -23,7 +23,7 @@ def select_marketplace
 					# Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Bukalapak'),
 					Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Tokopedia'),
 					Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Shopee'),
-					Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Tanihub'),
+					# Telegram::Bot::Types::InlineKeyboardButton.new(text: 'Tanihub'),
 				]
 				markup = Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: kb, one_time_keyboard: true)
 				bot.api.send_message(chat_id: message.chat.id, reply_to_message_id: message.message_id, text: 'Choose Marketplace:', reply_markup: markup)
@@ -42,7 +42,7 @@ Telegram::Bot::Client.run($token) do |bot|
 			when message.text.include?('/key')
 				@keyword = message.text.gsub('/key', '').lstrip
 				select_marketplace
-			when ['Tokopedia', 'Shopee', 'Tanihub'].any? { |text| text.include? message.text }
+			when ['Tokopedia', 'Shopee'].any? { |text| text.include? message.text }
 				@marketplace = message.text
 				Telegram::Bot::Types::ReplyKeyboardRemove.new(remove_keyboard: true)
 			end
@@ -55,15 +55,8 @@ Telegram::Bot::Client.run($token) do |bot|
 				rescue Telegram::Bot::Exceptions::ResponseError => e
 					p 'failed at empty file'
 					Scrapper.scrapper(@keyword, @marketplace)
-					retries += 1
-					if retries < 3
-						retry
-					else
-						p 'writing headers'
-						@csv = CSV.open("data#{message.from.id}.csv", 'a+')
-						@csv << ['Product Name', 'Price', 'Location', 'URL']
-						retry
-					end
+					retry if (retries += 1) < 5
+					raise e.message if retries == 5
 				end
 				@keyword = ''
 				@marketplace = ''
