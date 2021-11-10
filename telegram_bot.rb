@@ -56,12 +56,13 @@ Telegram::Bot::Client.run($token) do |bot|
 					p 'failed at empty file'
 					Scrapper.scrapper(@keyword, @marketplace)
 					retries += 1
-					if retries < 5
+					if retries < 3
 						retry
 					else
 						p 'writing headers'
 						@csv = CSV.open("data#{message.from.id}.csv", 'a+')
 						@csv << ['Product Name', 'Price', 'Location', 'URL']
+						retry
 					end
 				end
 				@keyword = ''
