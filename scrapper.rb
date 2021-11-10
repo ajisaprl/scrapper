@@ -117,6 +117,7 @@ class Scrapper
 					retry if (retries += 1) < 5
 					raise e.message if retries == 5
 				end
+				binding.pry
 				3.times do
 					n = 0
 					while n < JSON.parse(response.body)['data']['sellings']['items'].count
