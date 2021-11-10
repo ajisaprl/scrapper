@@ -106,9 +106,17 @@ class Scrapper
 					end
 				end
 			when 'Tanihub'
-				response = TanihubSupport.curl_command(product_keyword)
-				@csv << ['Product Name', 'Price', 'Location', 'URL']
-				sleep 3
+				retries = 0
+				begin
+					response = TanihubSupport.curl_command(product_keyword)
+					@csv << ['Product Name', 'Price', 'Location', 'URL']
+					sleep 3
+					JSON.parse(response.body)['data']['sellings']['items'].count
+				rescue NoMethodError => e
+					p 'failed at COUNT'
+					retry if (retries += 1) < 5
+					raise e.message if retries == 5
+				end
 				3.times do
 					n = 0
 					while n < JSON.parse(response.body)['data']['sellings']['items'].count
