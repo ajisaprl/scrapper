@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem 'httparty'
-gem 'nokogiri' '~> 1.15.3'
+gem 'nokogiri', '~> 1.15.3'
 gem 'csv'
 gem 'rest-client'
 gem 'pry', '~> 0.12.2'
