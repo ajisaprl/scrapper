@@ -1,2 +1,2 @@
-require './my_app.rb'
+require './telegram_bot.rb'
 run Sinatra::Application
